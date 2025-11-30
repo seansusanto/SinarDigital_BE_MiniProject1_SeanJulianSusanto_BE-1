@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Tugas</title>
+</head>
+
+<body>
+    <h1>Daftar Tugas Mahasiswa</h1>
+
+    <ul id="todo-list"></ul>
+
+    <br>
+    <a href="/">Kembali ke Home</a>
+
+    <ul id="todo-list"></ul>
+
+<script>
+fetch("/api/todos")
+    .then(res => res.json())
+    .then(data => {
+        const list = document.getElementById("todo-list");
+
+        data.todos.forEach(todo => {
+            const li = document.createElement("li");
+
+            const span = document.createElement("span");
+            span.textContent = todo.title;
+            if (todo.completed) {
+                span.style.textDecoration = "line-through";
+            }
+
+            const doneBtn = document.createElement("button");
+            doneBtn.textContent = todo.completed ? "Undo" : "Done";
+            doneBtn.style.marginLeft = "10px";
+
+            doneBtn.onclick = () => {
+                const newStatus = !todo.completed;
+
+                fetch(`/api/todos/${todo.id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ completed: newStatus })
+                })
+                .then(res => res.json())
+                .then(updatedTodo => {
+                    todo.completed = updatedTodo.todo.completed;
+                    span.style.textDecoration = todo.completed ? "line-through" : "none";
+                    doneBtn.textContent = todo.completed ? "Undo" : "Done";
+                })
+                .catch(err => console.log(err));
+            };
+
+            li.appendChild(span);
+            li.appendChild(doneBtn);
+            list.appendChild(li);
+        });
+    })
+    .catch(err => console.log(err));
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tambah Tugas</title>
+</head>
+
+<body>
+    <h1>Tambah Tugas Baru</h1>
+
+    <form action="/api/todos" method="POST">
+        <label for="title">Nama Tugas:</label>
+        <input type="text" id="title" name="title" required>
+
+        <button type="submit">Tambah</button>
+    </form>
+
+    <br>
+    <a href="/">Kembali ke Home</a>
+</body>
+</html>
